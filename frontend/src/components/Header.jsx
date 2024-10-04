@@ -15,7 +15,7 @@ function Header() {
                 variant="h5"
                 onClick={() => { navigate('/') }}
             >
-                ProjectOr
+                ProJector
             </Typography>
             {/* { localStorage.getItem('token') ? ( */} 
             <>
