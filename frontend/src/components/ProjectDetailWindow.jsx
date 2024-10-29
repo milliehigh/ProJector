@@ -24,11 +24,9 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import AppBar from '@mui/material/AppBar';
 import Chip from '@mui/material/Chip';
-// import { PageContainer } from '@toolpad/core/PageContainer';
-// import { AppProvider } from '@toolpad/core/AppProvider';
-import { apiGet, apiPost } from '../api';
+
+import { apiGet } from '../api';
 import { useLocation } from 'react-router-dom';
-import ProjectDetailWindow from '../components/ProjectDetailWindow';
 
 import Header from '../components/Header';
 import { useNavigate, useParams } from "react-router-dom";
@@ -61,17 +59,17 @@ const StyledChip = styled(Chip)({
 const statusOptions = ['Pending', 'Completed'];
 
 
-export default function ProjectDetail() {
-    const { projectID } = useParams();
+export default function ProjectDetailWindow(projectID) {
+    // const { projectID } = useParams();
     const navigate = useNavigate();
-    // const navigate = useLocation();
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const [projectInfo, setprojectInfo] = React.useState([]);
-    const [skillsSet, setSkills] = React.useState([]);
     const [userId, setUserId] = React.useState('');
     const [userType, setUserType] = React.useState('');
+    const [skillsSet, setSkills] = React.useState([]);
+
 
     // React.useEffect(() => {
     //   const token = localStorage.getItem("token");
@@ -81,104 +79,104 @@ export default function ProjectDetail() {
     //     setUserType(tokenData.userType)
     //   }
     // }, []);
+        // const getDetails = async () => {
+        
+    // try {
+    //     console.log(projectID)
+    //     const res = apiGet("/project/details", `projectId=${projectID.projectID}`)
+    
+    //         console.log(res);
+    //         if (!res.error) {
+    //             setprojectInfo(res);
+    //             setSkills(res.projectSkills)
+    //             console.log("details:", res)
+    //         } else {
+    //             throw new Error("Get Project details");
+    //         }
+    //     }  catch (err) {
+    //     alert(err);
+    // }
+    // }
 
+    console.log(projectID.projectID)
+    React.useState(() => {
+        // getDetails();
     // React.useEffect(() => {
-    //   // const glob = localStorage.getItem('token');
-    //   // setToken(glob);
-    //   // fetchProjectDeets();
-    //   apiGet("/project/details", `projectId=${projectID}`)
-    //   .then((data) => {
-    //       console.log(data);
-    //       if (!data.error) {
-    //         setprojectInfo(data);
-    //         console.log("details:", data)
-    //       } else {
-    //           throw new Error("Get Project details");
-    //       }
-    //   })
-    //   .catch(() => {
-    //       alert("not valid.");
-    //   });
-    // }, []);
-    // React.useEffect(() => {
-    //   apiGet("/project/details", `projectId=${projectID}`)
-    //   .then((data) => {
-    //       if (!data.error) {
-    //         setprojectInfo(data);
-    //         setSkills(data.projectSkills)
-    //         console.log("details:", data)
-    //       } else {
-    //           throw new Error("Get Project details");
-    //       }
-    //   })
-    //   .catch(() => {
-    //       alert("not valid.");
-    //   });
-    // }, [])
+      // const glob = localStorage.getItem('token');
+      // setToken(glob);
+      apiGet("/project/details", `projectId=${projectID}`)
+      .then((data) => {
+          console.log(data);
+          if (!data.error) {
+            setprojectInfo(data);
+            setSkills(data.projectSkills)
+            console.log("details:", data)
+          } else {
+              throw new Error("Get Project details");
+          }
+      })
+      .catch((err) => {
+          alert(err);
+      });
+    }, []);
 
-    // const handleMenuItemClick = (event, index) => {
-    //     setSelectedIndex(index);
-    //     console.log(event)
-    //     if (index == 1) {
-    //       // complete project
-    //       apiPost("/project/company/complete", `projectId=${projectID}`)
-    //       .then((data) =>{
-    //           if (!data.error) {
-    //               console.log(data)
-    //           } else {
-    //               throw new Error("Project Complete Failed");
-    //           }
-    //       })
-    //       .catch(() => {
-    //           alert("Project Complete are not valid.")
-    //       });
-    //     }
-    //     setOpen(false);
-    // };
 
-    // const handleToggle = () => {
-    //     setOpen((prevOpen) => !prevOpen);
-    // };
+    const handleMenuItemClick = (event, index) => {
+        setSelectedIndex(index);
+        console.log(event)
+        if (index == 1) {
+          // complete project
+          apiPost("/project/company/complete", `projectId=${projectID}`)
+          .then((data) =>{
+              if (!data.error) {
+                  console.log(data)
+              } else {
+                  throw new Error("Project Complete Failed");
+              }
+          })
+          .catch((err) => {
+              alert("Project Complete are not valid.", err)
+          });
+        }
+        setOpen(false);
+    };
 
-    // const handleClose = (event) => {
-    //     if (anchorRef.current && anchorRef.current.contains(event.target)) {
-    //         return;
-    //     }
-    // };
+    const handleToggle = () => {
+        setOpen((prevOpen) => !prevOpen);
+    };
 
-    // const companybuttons = [
-    //     <Button key="EditProjectBtn" sx={{backgroundColor: "orange"}}>Edit Project</Button>,
-    //     <Button key="candidateList" sx={{backgroundColor: "grey"}}>Candidate List</Button>,
-    //     // <Button key="company-status">Project Status</Button>,
-    //     <Button
-    //         sx={{backgroundColor: "#21b6ae"}}
-    //         key="companyStatus"        
-    //         size="small"
-    //         ref={anchorRef}
-    //         aria-controls={open ? 'split-button-menu' : undefined}
-    //         aria-expanded={open ? 'true' : undefined}
-    //         aria-label="select merge strategy"
-    //         aria-haspopup="menu"
-    //         onClick={handleToggle}
-    //     >
-    //     {statusOptions[selectedIndex]}<ArrowDropDownIcon />
-    //     </Button>
-    //   ];
+    const handleClose = (event) => {
+        if (anchorRef.current && anchorRef.current.contains(event.target)) {
+            return;
+        }
+    };
 
-    // const professionalButtons = [
-    //   <Button key="status" sx={{backgroundColor: "#21b6ae"}}>Status</Button>
-    // ];
+    const companybuttons = [
+        <Button key="EditProjectBtn" sx={{backgroundColor: "orange"}}>Edit Project</Button>,
+        <Button key="candidateList" sx={{backgroundColor: "grey"}}>Candidate List</Button>,
+        // <Button key="company-status">Project Status</Button>,
+        <Button
+            sx={{backgroundColor: "#21b6ae"}}
+            key="companyStatus"        
+            size="small"
+            ref={anchorRef}
+            aria-controls={open ? 'split-button-menu' : undefined}
+            aria-expanded={open ? 'true' : undefined}
+            aria-label="select merge strategy"
+            aria-haspopup="menu"
+            onClick={handleToggle}
+        >
+        {statusOptions[selectedIndex]}<ArrowDropDownIcon />
+        </Button>
+      ];
+
+    const professionalButtons = [
+      <Button key="status" sx={{backgroundColor: "#21b6ae"}}>Apply</Button>
+    ];
 
   return (
     <Box sx={{ display: 'flex' }}>
-      
-      <CssBaseline />
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-        <Header></Header>
-      </AppBar>
-      <ProjectDetailWindow projectID={projectID}/>
-      
-      {/* <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{flexGrow: 1, p: 3 }}>
 
         <div style={headerStyle}>
           <Avatar sx={{ width: 32, height: 32 }} />
@@ -227,10 +225,22 @@ export default function ProjectDetail() {
             {skillsSet.map((skill, idx) => (
               <StyledChip label={skill} />
             ))}
-            </Box>
 
 
           </Box>
+          {/* {projectInfo.companyId === userId ? <ButtonGroup
+            orientation="vertical"
+            aria-label="Vertical button group"
+            variant="contained"
+          >
+            {companybuttons} 
+          </ButtonGroup> : <ButtonGroup
+            orientation="vertical"
+            aria-label="Vertical button group"
+            variant="contained"
+          >
+            {professionalButtons} 
+          </ButtonGroup>} */}
           <ButtonGroup
             orientation="vertical"
             aria-label="Vertical button group"
@@ -285,6 +295,15 @@ export default function ProjectDetail() {
           Key Responsibilities
         </Typography>
         <List sx={{ listStyleType: 'disc', padding: '10px 40px' }}>
+          {/* <ListItem sx={{ display: 'list-item' }}>
+            check
+          </ListItem>
+          <ListItem sx={{ display: 'list-item' }}>
+            check
+          </ListItem>
+          <ListItem sx={{ display: 'list-item' }}>
+            check
+          </ListItem> */}
           <ListItem>
             {projectInfo.projectKeyResponsibilities}
           </ListItem>
@@ -298,7 +317,8 @@ export default function ProjectDetail() {
         <Typography variant="h5" component="h2" gutterBottom>
         {projectInfo.contactEmail}
         </Typography>
-      </Box> */}
-    </Box>
+      </Box>
+      </Box>
+      </Box>
   );
 }
