@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiGet, apiPut } from '../api';
+import { apiGet } from '../api';
 import { styled } from '@mui/material/styles';
 
 import Box from '@mui/material/Box';
@@ -53,7 +53,7 @@ const headerStyle = {
   
   const statusCompOptions = ['Pending', 'Completed'];
   const statusProfOptions = ['Apply', 'Pending'];
-export default function ProjectDetailWindow({ projectID }) {
+export default function Dummy({ projectID }) {
     const [projectInfo, setProjectInfo] = useState(null);
     const [skills, setSkills] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -62,7 +62,8 @@ export default function ProjectDetailWindow({ projectID }) {
     const anchorRef = React.useRef(null);
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const [selectedIndex2, setSelectedIndex2] = React.useState(0);
-    const [open, setOpen] = React.useState(false);
+
+
 
 
     useEffect(() => {
@@ -100,8 +101,7 @@ export default function ProjectDetailWindow({ projectID }) {
         console.log(event)
         if (index == 1) {
           // complete project
-          const projectId = projectID;
-          apiPut("/project/company/complete", {projectId})
+          apiPost("/project/company/complete", `projectId=${projectID}`)
           .then((data) =>{
               if (!data.error) {
                   console.log(data)
@@ -127,37 +127,23 @@ export default function ProjectDetailWindow({ projectID }) {
     };
 
     const handleApply = () => {
-        const professionalId = userId;
-        const projectId = projectID;
         if (selectedIndex === 0) {
             setSelectedIndex2(1);
-            apiPost("/project/professional/apply", {professionalId, projectId})
-            .then((data) => {
-                if (!data.error) {
-                    console.log(data)
-                } else {
-                    throw new Error("Project Apply Failed");
-                }
-            })
-            .catch((err) => {
-                alert("Project Apply are not valid.", err)
-            });
         } else {
             setSelectedIndex2(0);
-            apiPost("/project/professional/leave", {professionalId, projectId})
-            .then((data) =>{
-                if (!data.error) {
-                    console.log(data)
-                } else {
-                    throw new Error("Project leave Failed");
-                }
-            })
-            .catch((err) => {
-                alert("Project Apply are not valid.", err)
-            });
         }
+        apiPost("/project/professional/apply", `professionalId=${userId}, projectId=${projectID}`)
+          .then((data) =>{
+              if (!data.error) {
+                  console.log(data)
+              } else {
+                  throw new Error("Project Apply Failed");
+              }
+          })
+          .catch((err) => {
+              alert("Project Apply are not valid.", err)
+          });
     };
-    
     const companybuttons = [
         <Button key="EditProjectBtn" sx={{backgroundColor: "orange"}}>Edit Project</Button>,
         <Button key="candidateList" sx={{backgroundColor: "grey"}}>Candidate List</Button>,
@@ -190,8 +176,8 @@ export default function ProjectDetailWindow({ projectID }) {
     }
 
     return (
-        <Box sx={{width: '100%'}}>
-      <Box component="main" sx={{flexGrow: 1, p: 3, width: '100%' }}>
+        <Box sx={{ display: 'flex'}}>
+      <Box component="main" sx={{flexGrow: 1, p: 3 }}>
 
         <div style={headerStyle}>
           <Avatar sx={{ width: 32, height: 32 }} />
@@ -199,7 +185,6 @@ export default function ProjectDetailWindow({ projectID }) {
             <b> {projectInfo.projectName}</b>
           </Typography>
         </div>
-        
         
         <Box style={secondaryStyle}>
           <Box>
@@ -244,22 +229,26 @@ export default function ProjectDetailWindow({ projectID }) {
 
 
           </Box>
-          </Box>
-          {userType === 'company' && userId === projectInfo.pCompanyId ? <ButtonGroup
+          {/* {projectInfo.companyId === userId ? <ButtonGroup
             orientation="vertical"
             aria-label="Vertical button group"
             variant="contained"
           >
             {companybuttons} 
-          </ButtonGroup> : 
-          <ButtonGroup
+          </ButtonGroup> : <ButtonGroup
             orientation="vertical"
             aria-label="Vertical button group"
             variant="contained"
           >
             {professionalButtons} 
+          </ButtonGroup>} */}
+          <ButtonGroup
+            orientation="vertical"
+            aria-label="Vertical button group"
+            variant="contained"
+          >
+            {companybuttons} 
           </ButtonGroup>
-          }
           <Popper
         sx={{ zIndex: 1 }}
         open={open}
@@ -282,7 +271,7 @@ export default function ProjectDetailWindow({ projectID }) {
                   {statusCompOptions.map((option, index) => (
                     <MenuItem
                       key={option}
-                    //   disabled={index === 2}
+                      disabled={index === 2}
                       selected={index === selectedIndex}
                       onClick={(event) => handleMenuItemClick(event, index)}
                     >
@@ -329,6 +318,7 @@ export default function ProjectDetailWindow({ projectID }) {
         <Typography variant="h5" component="h2" gutterBottom>
         {projectInfo.contactEmail}
         </Typography>
+      </Box>
       </Box>
       </Box>
     );
