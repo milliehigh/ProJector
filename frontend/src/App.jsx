@@ -19,6 +19,7 @@ import ProjectCandidateList from './pages/ProjectCandidateList';
 import ProfilePage from './pages/ProfilePage';
 // import ProtectedRoute from "./components/ProtectedRoute"
 import EditProfilePage from './pages/EditProfilePage';
+import RateProfessional from './pages/RateProfessional';
 
 
 function Logout() {
@@ -53,6 +54,9 @@ function App() {
             <Route path="/projectdetail/:projectID" element={<ProjectDetail />} />
             <Route path="/projectpage/:projectID" element={<ProjectPage />} />
             <Route path="/projectCandidateList" element={<ProjectCandidateList />} />
+            <Route path="/project/:projectId/rate" element={<RateProfessional />} />
+            <Route path="/project/rate" element={<RateProfessional />} />
+            {/* <Route path="/project/:projectId/rate/:profesionalId" element={<RateProfessional />} /> */}
         </Routes>
     </BrowserRouter>
   );
