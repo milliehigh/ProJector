@@ -22,7 +22,6 @@ import EditProfilePage from './pages/EditProfilePage';
 import EditProject from './pages/EditProject';
 import RateProfessional from './pages/RateProfessional';
 
-
 function Logout() {
     localStorage.clear()
     return <Navigate to="/" />
@@ -54,7 +53,10 @@ function App() {
             <Route path="/profile/:userId" element={<ProfilePage />} />
             <Route path="/projectdetail/:projectID" element={<ProjectDetail />} />
             <Route path="/projectpage/:projectID" element={<ProjectPage />} />
-            <Route path="/projectCandidateList" element={<ProjectCandidateList />} />
+            <Route path="/projectpage/:projectID/edit" element={<EditProject />} />
+            <Route path="/project/:projectId/rate" element={<RateProfessional />} />
+            <Route path="/project/rate" element={<RateProfessional />} />
+            <Route path="/project/:projectId/applicants" element={<ProjectApplicantList />} />
         </Routes>
     </BrowserRouter>
   );
