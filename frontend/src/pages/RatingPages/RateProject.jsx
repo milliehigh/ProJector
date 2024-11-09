@@ -1,16 +1,15 @@
 import * as React from 'react';
 import RaitingMainContent from '../../components/RaitingMainContent';
-import RaitingSideBar from '../../components/RaitingSideBar';
-import {Typography, Box} from '@mui/material'
+import {Typography, Box, Card} from '@mui/material'
 import { apiGet } from '../../api';
+
 
 function RateProfessional() {
 	const currentUrl = window.location.href;
     const [projectId, setProjectId] = React.useState('');
-	const [professionals, setProfessionals] = React.useState([]);
 	const [projectName, setProjectName] = React.useState('');
-	const [selectedUser, setSelectUserID] = React.useState(null);
-	const [selectName, setSelectName] = React.useState(null);
+    const [companyId, setCompanyId] = React.useState('');
+    const [selectedUser, setSelectUserID] = React.useState(null);
 
 	React.useEffect(() => {
 		// const glob = localStorage.getItem('token');
@@ -18,7 +17,6 @@ function RateProfessional() {
 		for (const segment of currentUrl.split('/')) {
 			console.log(segment);
 		}
-
 		setProjectId(currentUrl.split('/')[currentUrl.split('/').length - 2])
 	}, []);
 
@@ -28,27 +26,37 @@ function RateProfessional() {
 			apiGet('/project/details', `projectId=${projectId}`)
 			.then((data) => {
 				console.log("fuck::", data)
-				setProfessionals(data.listOfProfessionals);
 				setProjectName(data.projectName);
+                setCompanyId(data.pCompanyId);
+                console.log(data.pCompanyId)
+                apiGet("/user/details/company", `id=${data.pCompanyId}`)
+                .then((data) => {
+                    if (!data.error) {
+                        setSelectUserID(data);
+                        console.log("Profile fetched", data);
+                    } else {
+                        throw new Error("Get Details Failed");
+                    }
+                })
+                .catch((err) => {
+                    alert(err);
+                });
 			})
 		}
 		
 	}, [projectId])
-
-	const handleSelectUser = (user) => {
-		setSelectUserID(user);
-	};
-
-	const handleSelectName = (name) => {
-		setSelectName(name);
-	};
 
 	return (
 		<div style={{ display: 'flex', flexDirection: 'column' }}>
 			<Typography variant="h3" sx={{marginLeft: 'auto', marginRight: 'auto'}}>Review</Typography>
 			<div style={{ display: "flex", flexDirection: 'row', width: '100%', height: '100%'}}>
 				<Box sx={{ flex: '1' }}>
-					<RaitingSideBar selectedUser={selectedUser} selectName={selectName} onSelectUser={handleSelectUser} professionals={professionals} projectName={projectName}/>
+                <Card sx={{width: '100%', height: '100%', display: 'flex', flexDirection: 'column', marginRight: '4vw', paddingRight: '1vw'}}>
+                    <Typography variant="h4" gutterBottom sx={{fontWeight: 'bold', marginLeft: 'auto', marginRight: 'auto'}}>
+                        Project: {projectName}
+                    </Typography>
+                    <Typography variant='h7' sx={{marginLeft: 'auto', marginRight: 'auto'}}>Start Reviewing the Project!</Typography>
+                </Card>
 				</Box>
 				<Box sx={{ flex: '3' }}>
 					<RaitingMainContent selectedUser={selectedUser} projectId={projectId}/>
