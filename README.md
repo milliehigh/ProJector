@@ -17,3 +17,7 @@
 # To clear or initialise database:
 1. Go to /backend directory
 2. bash db_controller.sh <clear/init/test>
+
+# ENV File
+1. Copy content inside .env.template
+2. Set FLASK_SECRET_KEY field to any string (e.g. JEMMA)
